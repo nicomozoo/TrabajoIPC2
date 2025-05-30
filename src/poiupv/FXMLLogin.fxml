@@ -21,7 +21,7 @@
    <children>
       <ImageView fx:id="imagenFondo" fitHeight="535.0" fitWidth="837.0" pickOnBounds="true" StackPane.alignment="CENTER">
          <image>
-            <Image url="@../resources/fondo%20degradado%20con%20olas.png" />
+            <Image url="@../resources/fondo_degradado_con_olas.png" />
          </image>
       </ImageView>
       <VBox alignment="CENTER">
@@ -77,20 +77,36 @@
                               <Insets left="30.0" />
                            </GridPane.margin>
                         </VBox>
-                        <VBox alignment="CENTER_LEFT" prefHeight="94.0" prefWidth="504.0" GridPane.columnSpan="2" GridPane.rowIndex="1">
-                           <children>
-                              <Label text="Password" textFill="#025477" />
-                              <PasswordField fx:id="passwordField" prefHeight="26.0" prefWidth="538.0" promptText="LettersNumbersSymbols">
-                                 <VBox.margin>
-                                    <Insets right="225.0" />
-                                 </VBox.margin>
-                              </PasswordField>
-                              <Label fx:id="passwordError" alignment="BOTTOM_LEFT" prefHeight="18.0" prefWidth="642.0" text="Contraseña incorrecta" textFill="#ca0505" visible="false" />
-                           </children>
+                        <HBox alignment="CENTER_LEFT" GridPane.columnSpan="2" GridPane.rowIndex="1">
                            <GridPane.margin>
                               <Insets left="30.0" />
                            </GridPane.margin>
-                        </VBox>
+                           <children>
+                              <VBox alignment="CENTER_LEFT" prefHeight="94.0" prefWidth="351.0">
+                                 <children>
+                                    <Label text="Password" textFill="#025477" />
+                                    <PasswordField fx:id="passwordField" prefHeight="26.0" prefWidth="538.0" promptText="LettersNumbersSymbols">
+                                       <VBox.margin>
+                                          <Insets />
+                                       </VBox.margin>
+                                    </PasswordField>
+                                    <Label fx:id="passwordError" alignment="BOTTOM_LEFT" prefHeight="18.0" prefWidth="642.0" text="Contraseña incorrecta" textFill="#ca0505" visible="false" />
+                                 </children>
+                              </VBox>
+                              <Button mnemonicParsing="false" prefHeight="23.0" prefWidth="26.0" style="-fx-background-color: transparent; -fx-border-color: #3ab7aa; -fx-border-radius: 25;">
+                                 <graphic>
+                                    <ImageView fitHeight="17.0" fitWidth="47.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../resources/ojo_contraseña.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                                 <HBox.margin>
+                                    <Insets left="3.0" />
+                                 </HBox.margin>
+                              </Button>
+                           </children>
+                        </HBox>
                         <VBox alignment="CENTER_RIGHT" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                            <children>
                               <Button alignment="CENTER" graphicTextGap="7.0" mnemonicParsing="false" onAction="#handleLoginButton" prefHeight="30.0" prefWidth="99.0" style="-fx-background-color: #3ab7aa; -fx-background-radius: 20;" text="Entrar" textFill="WHITE">
