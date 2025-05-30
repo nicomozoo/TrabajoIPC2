@@ -14,7 +14,6 @@
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.Region?>
@@ -23,38 +22,33 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="534.0" prefWidth="769.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="poiupv.FXMLDocumentController">
+
+<StackPane prefHeight="599.0" prefWidth="914.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="poiupv.FXMLDocumentController">
    <children>
-      <ImageView fitHeight="542.0" fitWidth="781.0" pickOnBounds="true">
+      <ImageView fitHeight="150.0" fitWidth="802.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../resources/fondo%20degradado%20con%20olas.png" />
+            <Image url="@../resources/fondo_degradado_con_olas.png" />
          </image>
       </ImageView>
-      <AnchorPane prefHeight="583.0" prefWidth="800.0">
+      <StackPane>
          <children>
-            <VBox layoutX="35.0" layoutY="23.0" prefHeight="502.0" prefWidth="698.0" style="-fx-background-color: #FFFFFF;">
+            <VBox prefHeight="556.0" prefWidth="853.0">
                <children>
-                  <HBox alignment="CENTER_RIGHT" prefHeight="58.0" prefWidth="698.0" style="-fx-background-color: #3ab7aa;">
+                  <HBox alignment="CENTER_RIGHT" prefHeight="44.0" prefWidth="854.0" style="-fx-background-color: #3ab7aa;">
                      <children>
-                        <Label prefHeight="27.0" prefWidth="102.0" text="NAVALTEST" textFill="WHITE">
+                        <Label alignment="CENTER_RIGHT" prefHeight="27.0" prefWidth="102.0" text="NAVALTEST" textFill="WHITE">
                            <font>
                               <Font name="System Bold" size="18.0" />
                            </font>
                            <HBox.margin>
-                              <Insets left="5.0" />
+                              <Insets right="730.0" />
                            </HBox.margin>
+                           <opaqueInsets>
+                              <Insets right="50.0" />
+                           </opaqueInsets>
                         </Label>
-                        <Region prefHeight="31.0" prefWidth="434.0" />
-                        <Button mnemonicParsing="false" onAction="#preguntasOnAction" prefHeight="22.0" prefWidth="76.0" style="-fx-background-color: #3ab7aa; -fx-border-color: #FFFFFF; -fx-border-radius: 20;" text="Preguntas" textFill="WHITE">
-                           <font>
-                              <Font name="System Bold" size="12.0" />
-                           </font>
-                           <HBox.margin>
-                              <Insets right="10.0" />
-                           </HBox.margin>
-                        </Button>
-                        <MenuButton contentDisplay="RIGHT" mnemonicParsing="false" popupSide="TOP" prefHeight="30.0" prefWidth="52.0" style="-fx-background-color: white; -fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: #3ab7aa;">
-                           <items>
+                        <MenuButton contentDisplay="RIGHT" mnemonicParsing="false" popupSide="TOP" prefHeight="34.0" prefWidth="44.0" style="-fx-background-color: white; -fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: #3ab7aa;">
+                          <items>
                               <MenuItem mnemonicParsing="false">
                                  <graphic>
                                     <Button mnemonicParsing="false" onAction="#handleBotEditarPerfil" prefHeight="26.0" prefWidth="89.0" style="-fx-background-color: #3ab7aa; -fx-background-radius: 20;" text="Editar Perfil" textFill="WHITE">
@@ -64,16 +58,16 @@
                                     </Button>
                                  </graphic>
                               </MenuItem>
-                              <MenuItem mnemonicParsing="false">
+                            <MenuItem mnemonicParsing="false">
                                  <graphic>
-                                    <Button fx:id="botCerrarSesion" mnemonicParsing="false" onAction="#handleBotCerrarSesion" style="-fx-background-color: #3ab7aa; -fx-background-radius: 20;" text="Cerrar Sesión" textFill="WHITE">
+                                  <Button fx:id="botCerrarSesion" mnemonicParsing="false" onAction="#handleBotCerrarSesion" style="-fx-background-color: #3ab7aa; -fx-background-radius: 20;" text="Cerrar Sesión" textFill="WHITE">
                                        <font>
                                           <Font name="System Bold" size="12.0" />
                                        </font>
                                     </Button>
                                  </graphic>
                               </MenuItem>
-                              <MenuItem mnemonicParsing="false">
+                            <MenuItem mnemonicParsing="false">
                                  <graphic>
                                     <Button alignment="CENTER" mnemonicParsing="false" onAction="#handleBotVerSesiones" prefHeight="26.0" prefWidth="91.0" style="-fx-background-color: #3ab7aa; -fx-background-radius: 20;" text="Sesiones" textFill="WHITE">
                                        <font>
@@ -82,9 +76,9 @@
                                     </Button>
                                  </graphic>
                               </MenuItem>
-                           </items>
+                          </items>
                            <graphic>
-                              <ImageView fitHeight="18.0" fitWidth="19.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fitHeight="31.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../resources/Usuario_azul.jpg" />
                                  </image>
@@ -96,113 +90,111 @@
                         </MenuButton>
                      </children>
                   </HBox>
+                  <HBox alignment="CENTER_RIGHT" fillHeight="false" spacing="5.0" VBox.vgrow="NEVER">
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#preguntasOnAction" style="-fx-background-color: #3ab7aa;" text="Preguntas" textFill="WHITE">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Button>
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Label text="Zoom" />
+                        <Button mnemonicParsing="false" onAction="#zoomOut" style="-fx-background-color: #3ab7aa;" text="-" textFill="WHITE">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Button>
+                        <Slider fx:id="zoom_slider" HBox.hgrow="SOMETIMES" />
+                        <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#zoomIn" style="-fx-background-color: #3ab7aa;" text="+" textFill="WHITE">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Button>
+                     </children>
+                     <VBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </VBox.margin>
+                  </HBox>
                   <ToolBar prefHeight="40.0" prefWidth="200.0">
                      <items>
-                        <Button fx:id="buttonSelect" layoutX="10.0" layoutY="12.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="35.0">
+                        <Button fx:id="buttonMover" mnemonicParsing="false" onAction="#selectPanTool" prefHeight="33.0" prefWidth="33.0">
                            <graphic>
-                              <ImageView fitHeight="26.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fitHeight="31.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../resources/icons/cursor.png" />
                                  </image>
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Button fx:id="buttonMover" layoutX="10.0" layoutY="12.0" mnemonicParsing="false" onAction="#selectPanTool" prefHeight="28.0" prefWidth="35.0">
+                        <Button fx:id="buttonCoordinate" mnemonicParsing="false" onAction="#selectCoordinateTool" prefHeight="33.0" prefWidth="33.0">
                            <graphic>
-                              <ImageView fitHeight="24.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../resources/icons/movecursor.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                        </Button>
-                        <Button fx:id="buttonCoordinate" layoutX="10.0" layoutY="12.0" mnemonicParsing="false" onAction="#selectCoordinateTool" prefHeight="28.0" prefWidth="34.0">
-                           <graphic>
-                              <ImageView fitHeight="23.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fitHeight="28.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../resources/icons/point.png" />
                                  </image>
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Button fx:id="buttonLine" mnemonicParsing="false" onAction="#selectLineTool" prefHeight="17.0" prefWidth="31.0">
+                        <Button fx:id="buttonLine" mnemonicParsing="false" onAction="#selectLineTool">
                            <graphic>
-                              <ImageView fitHeight="23.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fitHeight="24.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../resources/icons/line.png" />
                                  </image>
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Button fx:id="buttonArco" mnemonicParsing="false" onAction="#selectCircleTool" prefHeight="21.0" prefWidth="30.0">
+                        <Button fx:id="buttonArco" mnemonicParsing="false" onAction="#selectCircleTool" prefHeight="33.0" prefWidth="33.0">
                            <graphic>
-                              <ImageView fitHeight="22.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fitHeight="22.0" fitWidth="19.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../resources/icons/arch.png" />
                                  </image>
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Button fx:id="butRuler" layoutX="344.0" layoutY="11.0" mnemonicParsing="false" onAction="#selectRulerTool" prefHeight="23.0" prefWidth="30.0">
+                        <Button fx:id="buttonText" mnemonicParsing="false" onAction="#selectTextTool">
                            <graphic>
-                              <ImageView fitHeight="24.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../resources/icons/ruler.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                        </Button>
-                        <Button fx:id="butProtractor" layoutX="304.0" layoutY="11.0" mnemonicParsing="false" onAction="#selectProtractorTool" prefHeight="23.0" prefWidth="30.0">
-                           <graphic>
-                              <ImageView fitHeight="24.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../resources/icons/protractor.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                        </Button>
-                        <Button fx:id="buttonText" mnemonicParsing="false" onAction="#selectTextTool" prefHeight="25.0" prefWidth="33.0">
-                           <graphic>
-                              <ImageView fitHeight="20.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fitHeight="24.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../resources/icons/text.png" />
                                  </image>
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Button fx:id="buttonDistance" layoutX="348.0" layoutY="11.0" mnemonicParsing="false" onAction="#selectDistanceTool" prefHeight="23.0" prefWidth="30.0">
+                        <Button fx:id="buttonDistance" mnemonicParsing="false" onAction="#selectDistanceTool">
                            <graphic>
-                              <ImageView fitHeight="24.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fitHeight="32.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@../resources/icons/distance.png" />
+                                    <Image url="@../resources/icons/ruler.png" />
                                  </image>
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Button fx:id="buttonAngulo" layoutX="511.0" layoutY="11.0" mnemonicParsing="false" onAction="#selectAnguloTool" prefHeight="23.0" prefWidth="30.0">
+                        <Button fx:id="buttonAngulo" mnemonicParsing="false" onAction="#selectAnguloTool">
                            <graphic>
-                              <ImageView fitHeight="24.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fitHeight="35.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@../resources/icons/angle.png" />
+                                    <Image url="@../resources/icons/protractor.png" />
                                  </image>
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Button fx:id="butClear" mnemonicParsing="false" onAction="#handleClearAll" prefHeight="23.0" prefWidth="30.0">
+                        <ColorPicker fx:id="colorPicker" onAction="#handleColorChange" prefHeight="36.0" prefWidth="86.0">
+                           <value>
+                              <Color />
+                           </value>
+                        </ColorPicker>
+                        <ComboBox fx:id="fontSizeBox" onAction="#handleFontSizeChange" prefHeight="36.0" prefWidth="65.0" promptText="14" />
+                        <Button fx:id="butClear" mnemonicParsing="false" onAction="#handleClearAll">
                            <graphic>
-                              <ImageView fitHeight="24.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fitHeight="33.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../resources/icons/delete.png" />
                                  </image>
                               </ImageView>
                            </graphic>
                         </Button>
-                        <ColorPicker fx:id="colorPicker" onAction="#handleColorChange" prefHeight="26.0" prefWidth="45.0">
-                           <value>
-                              <Color />
-                           </value>
-                        </ColorPicker>
-                        <ComboBox fx:id="fontSizeBox" onAction="#handleFontSizeChange" prefHeight="26.0" prefWidth="56.0" promptText="14" />
                      </items>
                   </ToolBar>
                   <SplitPane fx:id="splitPane" VBox.vgrow="ALWAYS">
@@ -231,31 +223,9 @@
                         </ScrollPane>
                      </items>
                   </SplitPane>
-                  <HBox alignment="CENTER_RIGHT" prefWidth="686.0">
+                  <HBox alignment="CENTER_RIGHT" prefHeight="22.0" prefWidth="902.0">
                      <children>
                         <Label fx:id="mousePosition" minHeight="-Infinity" minWidth="-Infinity" text="SceneX:     ScenY:     " wrapText="true" HBox.hgrow="ALWAYS" />
-                        <Region prefHeight="26.0" prefWidth="331.0" />
-                        <Label text="Zoom">
-                           <HBox.margin>
-                              <Insets right="10.0" />
-                           </HBox.margin></Label>
-                        <Button mnemonicParsing="false" onAction="#zoomOut" prefHeight="26.0" prefWidth="27.0" style="-fx-background-color: #3ab7aa;" text="-" textFill="WHITE">
-                           <font>
-                              <Font name="System Bold" size="12.0" />
-                           </font>
-                           <HBox.margin>
-                              <Insets right="5.0" />
-                           </HBox.margin>
-                        </Button>
-                        <Slider fx:id="zoom_slider" />
-                        <Button mnemonicParsing="false" onAction="#zoomIn" style="-fx-background-color: #3ab7aa;" text="+" textFill="WHITE">
-                           <font>
-                              <Font name="System Bold" size="12.0" />
-                           </font>
-                           <HBox.margin>
-                              <Insets left="5.0" />
-                           </HBox.margin>
-                        </Button>
                      </children>
                      <VBox.margin>
                         <Insets bottom="12.0" right="12.0" top="6.0" />
@@ -264,7 +234,6 @@
                </children>
             </VBox>
          </children>
-      </AnchorPane>
+      </StackPane>
    </children>
 </StackPane>
-
