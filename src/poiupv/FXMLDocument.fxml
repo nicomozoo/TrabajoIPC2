@@ -22,15 +22,9 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-
 <StackPane prefHeight="599.0" prefWidth="914.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="poiupv.FXMLDocumentController">
    <children>
-      <ImageView fitHeight="150.0" fitWidth="802.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../resources/fondo_degradado_con_olas.png" />
-         </image>
-      </ImageView>
-      <StackPane>
+      <StackPane style="-fx-border-color: #3ab7aa; -fx-border-width: 4;">
          <children>
             <VBox prefHeight="556.0" prefWidth="853.0">
                <children>
@@ -223,12 +217,15 @@
                         </ScrollPane>
                      </items>
                   </SplitPane>
-                  <HBox alignment="CENTER_RIGHT" prefHeight="22.0" prefWidth="902.0">
+                  <HBox alignment="CENTER_RIGHT" prefHeight="22.0" prefWidth="902.0" style="-fx-background-color: #3ab7aa;">
                      <children>
-                        <Label fx:id="mousePosition" minHeight="-Infinity" minWidth="-Infinity" text="SceneX:     ScenY:     " wrapText="true" HBox.hgrow="ALWAYS" />
+                        <Label fx:id="mousePosition" minHeight="-Infinity" minWidth="-Infinity" text="SceneX:     ScenY:     " textFill="WHITE" wrapText="true" HBox.hgrow="ALWAYS">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font></Label>
                      </children>
                      <VBox.margin>
-                        <Insets bottom="12.0" right="12.0" top="6.0" />
+                        <Insets />
                      </VBox.margin>
                   </HBox>
                </children>
