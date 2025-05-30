@@ -50,6 +50,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Arc;
+import javafx.scene.shape.ArcType;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
@@ -79,6 +81,7 @@ public class FXMLDocumentController implements Initializable {
     private Group drawGroup;
     private User currentUser;
     private Line linePainting;
+    private Arc arcPainting;
     private Circle circlePainting;
     private double inicioXArc;
     private double inicioYArc;
@@ -132,14 +135,18 @@ public class FXMLDocumentController implements Initializable {
     private Button buttonMover;
     @FXML
     private Button buttonAngulo;
+    @FXML
+    private Button buttonEraser;
     
     @FXML
     private void selectLineTool() {
         currentTool = Tool.LINE;
+        updateProtractorState();
     }
     @FXML
     private void selectCircleTool() {
         currentTool = Tool.CIRCLE;
+        updateProtractorState();
     }  
 
     @FXML
@@ -160,22 +167,21 @@ public class FXMLDocumentController implements Initializable {
     @FXML
 private void selectAnguloTool(ActionEvent event) {
     currentTool = Tool.ANGULO;
+
     if (transportadorView == null) {
-        transportadorView = new ImageView(new Image(getClass().getResource("/resources/transportador.jpg").toExternalForm()));
-        transportadorView.setOpacity(0.5); // Полупрозрачность
-        transportadorView.setFitWidth(200); // Подгони размер
+        transportadorView = new ImageView(
+        new Image(getClass().getResource("/resources/transportador.png").toExternalForm())
+        );
+        
+        transportadorView.setOpacity(0.5);
+        transportadorView.setFitWidth(200);
         transportadorView.setPreserveRatio(true);
-
-        transportadorView.setLayoutX(100); // Начальная позиция
+        transportadorView.setLayoutX(100);
         transportadorView.setLayoutY(100);
-
-        makeDraggable(transportadorView); // Добавим перетаскивание
-
+        makeDraggable(transportadorView);
         zoomGroup.getChildren().add(transportadorView);
-    } else {
-        // Можно включать/выключать видимость
-        transportadorView.setVisible(!transportadorView.isVisible());
     }
+    updateProtractorState();
 }
 
     private void makeDraggable(Node node) {
@@ -183,11 +189,22 @@ private void selectAnguloTool(ActionEvent event) {
         mouseAnchorX = event.getSceneX() - node.getLayoutX();
         mouseAnchorY = event.getSceneY() - node.getLayoutY();
     });
-
     node.setOnMouseDragged(event -> {
         node.setLayoutX(event.getSceneX() - mouseAnchorX);
         node.setLayoutY(event.getSceneY() - mouseAnchorY);
     });
+}
+
+    private void updateProtractorState() {
+    if (transportadorView == null) return;
+
+    if (currentTool == Tool.ANGULO) {
+        transportadorView.setMouseTransparent(false);
+        transportadorView.toFront();
+        transportadorView.setVisible(true);
+    } else {
+        transportadorView.setMouseTransparent(true);
+    }
 }
 
     
@@ -239,6 +256,7 @@ private void selectAnguloTool(ActionEvent event) {
     @FXML
     private void selectCoordinateTool(ActionEvent event) {
         currentTool = Tool.COORDINATE;
+        updateProtractorState();
     }
 
     private Point2D distanceStartPoint;
@@ -247,15 +265,23 @@ private void selectAnguloTool(ActionEvent event) {
     private void selectDistanceTool() {
         currentTool = Tool.DISTANCE;
         distanceStartPoint = null;
+        updateProtractorState();
     }
 
     @FXML
     private void selectPanTool(ActionEvent event) {
         currentTool = Tool.PAN;
+        updateProtractorState();
+    }
+
+    @FXML
+    private void selectEraserTool(ActionEvent event) {
+        currentTool = Tool.ERASER;
+        updateProtractorState();
     }
     
     private enum Tool {
-    LINE, CIRCLE, TEXT,COORDINATE,DISTANCE, PAN, ANGULO
+    LINE, CIRCLE, TEXT,COORDINATE,DISTANCE, PAN, ANGULO, ERASER
     }
     
     private void handleColorChange() {
@@ -317,9 +343,17 @@ private void selectAnguloTool(ActionEvent event) {
     private void handleClearAll() { 
         zoomGroup.getChildren().removeIf(node ->
                 node instanceof Line ||
-                node instanceof Circle ||
+                node instanceof Arc ||
                 node instanceof Text ||
                 node instanceof Group);
+    }
+    
+    private void enableRemovalOnClick(Node node) {
+        node.setOnMouseClicked(e -> {
+            if (currentTool == Tool.ERASER) {
+                zoomGroup.getChildren().remove(node);
+            }
+        });
     }
     
     
@@ -342,18 +376,27 @@ private void selectAnguloTool(ActionEvent event) {
             linePainting.setStrokeWidth(currentFontSize);
             linePainting.setStroke(colorPicker.getValue());
             addContextMenuToLine(linePainting);
+            enableRemovalOnClick(linePainting);
             zoomGroup.getChildren().add(linePainting);
         }
         case CIRCLE -> {
-            circlePainting = new Circle(1);
-            circlePainting.setStroke(colorPicker.getValue());
-            circlePainting.setFill(Color.TRANSPARENT);
-            circlePainting.setCenterX(e.getX());
-            circlePainting.setCenterY(e.getY());
+            arcPainting = new Arc();
+            arcPainting.setStroke(colorPicker.getValue());
+            arcPainting.setFill(Color.TRANSPARENT);
+            arcPainting.setType(ArcType.OPEN);
+            arcPainting.setStrokeWidth(currentFontSize);        
+            arcPainting.setPickOnBounds(false);
+            
             inicioXArc = e.getX();
-            circlePainting.setStrokeWidth(currentFontSize);
-            addContextMenuToCircle(circlePainting);
-            zoomGroup.getChildren().add(circlePainting);
+            inicioYArc = e.getY();
+
+            arcPainting.setCenterX(inicioXArc);
+            arcPainting.setCenterY(inicioYArc);
+            arcPainting.setRadiusX(1);
+            arcPainting.setRadiusY(1);
+            enableRemovalOnClick(arcPainting);
+            zoomGroup.getChildren().add(arcPainting);
+            addContextMenuToCircle(arcPainting);
         }
         case TEXT -> {
             Text textNode = new Text(e.getX(), e.getY(), "");
@@ -367,6 +410,7 @@ private void selectAnguloTool(ActionEvent event) {
             Optional<String> result = dialog.showAndWait();
             result.ifPresent(inputText -> {
             textNode.setText(inputText);
+            enableRemovalOnClick(textNode);
             addContextMenuToText(textNode);
             zoomGroup.getChildren().add(textNode);
             });
@@ -374,24 +418,18 @@ private void selectAnguloTool(ActionEvent event) {
         case COORDINATE -> {
             double x = e.getX();
             double y = e.getY();
+            Line diagonal1 = new Line(x - 5, y - 5, x + 5, y + 5);
+            Line diagonal2 = new Line(x - 5, y + 5, x + 5, y - 5);
 
-            Line horizontal = new Line(0, y, zoomGroup.getBoundsInLocal().getWidth(), y);
-            Line vertical = new Line(x, 0, x, zoomGroup.getBoundsInLocal().getHeight());                   
-            horizontal.setStroke(Color.GRAY);
-            vertical.setStroke(Color.GRAY);
-            horizontal.getStrokeDashArray().addAll(5.0, 5.0);
-            vertical.getStrokeDashArray().addAll(5.0, 5.0);
-            horizontal.setMouseTransparent(true); // чтобы не мешали клику
-            vertical.setMouseTransparent(true);
-            Text coords = new Text(x + 5, y - 5, String.format("(%.1f, %.1f)", x, y));
-            coords.setFill(Color.BLUE);
-            coords.setFont(Font.font(12));
-            coords.setMouseTransparent(true);
-            Rectangle hitbox = new Rectangle(0, 0, zoomGroup.getBoundsInLocal().getWidth(), zoomGroup.getBoundsInLocal().getHeight());
-            hitbox.setFill(Color.TRANSPARENT);
-            Group marker = new Group (hitbox,horizontal,vertical,coords);
-            addContextMenuToNode(marker);
-            zoomGroup.getChildren().add(marker);
+            diagonal1.setStroke(colorPicker.getValue());
+            diagonal2.setStroke(colorPicker.getValue());
+            diagonal1.setStrokeWidth(1.5);
+            diagonal2.setStrokeWidth(1.5);
+
+            Group cross = new Group(diagonal1, diagonal2);
+            enableRemovalOnClick(cross);
+            zoomGroup.getChildren().add(cross);
+            addContextMenuToNode(cross);
         }
         
         case DISTANCE -> {
@@ -407,7 +445,7 @@ private void selectAnguloTool(ActionEvent event) {
 
     distanceGroup = new Group(distanceLine, distanceLabel);
     addContextMenuToNode(distanceGroup);
-
+    enableRemovalOnClick(distanceGroup);
     zoomGroup.getChildren().add(distanceGroup);
 }
 
@@ -443,9 +481,26 @@ private void selectAnguloTool(ActionEvent event) {
             }
         }
         case CIRCLE -> {
-            if (circlePainting != null) {
-                double radius = Math.abs(e.getX() - inicioXArc);
-                circlePainting.setRadius(radius);
+            if (arcPainting != null) {
+                double finX = e.getX();
+                double finY = e.getY();
+
+                double centerX = (inicioXArc + finX) / 2;
+                double centerY = (inicioYArc + finY) / 2;
+
+                double dx = finX - inicioXArc;
+                double dy = finY - inicioYArc;
+                double radius = Math.sqrt(dx * dx + dy * dy) / 2;
+
+                double angle = Math.toDegrees(Math.atan2(-dy, dx));
+                angle = (angle + 360) % 360;
+
+                arcPainting.setCenterX(centerX);
+                arcPainting.setCenterY(centerY);
+                arcPainting.setRadiusX(radius);
+                arcPainting.setRadiusY(radius);
+                arcPainting.setStartAngle(angle);
+                arcPainting.setLength(180); // полукруг
             }
         }
         case DISTANCE -> {
@@ -511,7 +566,7 @@ private void selectAnguloTool(ActionEvent event) {
     });
 }
     
-    private void addContextMenuToCircle(Circle circle) {
+    private void addContextMenuToCircle(Arc circle) {
     ContextMenu contextMenu = new ContextMenu();
     MenuItem deleteItem = new MenuItem("Eliminar circulo");
 

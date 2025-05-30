@@ -22,7 +22,7 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<StackPane prefHeight="599.0" prefWidth="914.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="poiupv.FXMLDocumentController">
+<StackPane prefHeight="599.0" prefWidth="914.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="poiupv.FXMLDocumentController">
    <children>
       <StackPane style="-fx-border-color: #3ab7aa; -fx-border-width: 4;">
          <children>
@@ -111,7 +111,7 @@
                   </HBox>
                   <ToolBar prefHeight="40.0" prefWidth="200.0">
                      <items>
-                        <Button fx:id="buttonMover" mnemonicParsing="false" onAction="#selectPanTool" prefHeight="33.0" prefWidth="33.0">
+                        <Button fx:id="buttonMover" accessibleRole="TOGGLE_BUTTON" mnemonicParsing="false" onAction="#selectPanTool" prefHeight="33.0" prefWidth="33.0">
                            <graphic>
                               <ImageView fitHeight="31.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -120,7 +120,7 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Button fx:id="buttonCoordinate" mnemonicParsing="false" onAction="#selectCoordinateTool" prefHeight="33.0" prefWidth="33.0">
+                        <Button fx:id="buttonCoordinate" accessibleRole="TOGGLE_BUTTON" mnemonicParsing="false" onAction="#selectCoordinateTool" prefHeight="33.0" prefWidth="33.0">
                            <graphic>
                               <ImageView fitHeight="28.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -129,7 +129,7 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Button fx:id="buttonLine" mnemonicParsing="false" onAction="#selectLineTool">
+                        <Button fx:id="buttonLine" accessibleRole="TOGGLE_BUTTON" mnemonicParsing="false" onAction="#selectLineTool">
                            <graphic>
                               <ImageView fitHeight="24.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -138,7 +138,7 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Button fx:id="buttonArco" mnemonicParsing="false" onAction="#selectCircleTool" prefHeight="33.0" prefWidth="33.0">
+                        <Button fx:id="buttonArco" accessibleRole="TOGGLE_BUTTON" mnemonicParsing="false" onAction="#selectCircleTool" prefHeight="33.0" prefWidth="33.0">
                            <graphic>
                               <ImageView fitHeight="22.0" fitWidth="19.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -147,7 +147,7 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Button fx:id="buttonText" mnemonicParsing="false" onAction="#selectTextTool">
+                        <Button fx:id="buttonText" accessibleRole="TOGGLE_BUTTON" mnemonicParsing="false" onAction="#selectTextTool">
                            <graphic>
                               <ImageView fitHeight="24.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -156,7 +156,7 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Button fx:id="buttonDistance" mnemonicParsing="false" onAction="#selectDistanceTool">
+                        <Button fx:id="buttonDistance" accessibleRole="TOGGLE_BUTTON" mnemonicParsing="false" onAction="#selectDistanceTool">
                            <graphic>
                               <ImageView fitHeight="32.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -165,7 +165,7 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Button fx:id="buttonAngulo" mnemonicParsing="false" onAction="#selectAnguloTool">
+                        <Button fx:id="buttonAngulo" accessibleRole="TOGGLE_BUTTON" mnemonicParsing="false" onAction="#selectAnguloTool">
                            <graphic>
                               <ImageView fitHeight="35.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -174,17 +174,26 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <ColorPicker fx:id="colorPicker" onAction="#handleColorChange" prefHeight="36.0" prefWidth="86.0">
+                        <ColorPicker fx:id="colorPicker" onAction="#handleColorChange" prefHeight="36.0" prefWidth="44.0">
                            <value>
                               <Color />
                            </value>
                         </ColorPicker>
-                        <ComboBox fx:id="fontSizeBox" onAction="#handleFontSizeChange" prefHeight="36.0" prefWidth="65.0" promptText="14" />
-                        <Button fx:id="butClear" mnemonicParsing="false" onAction="#handleClearAll">
+                        <ComboBox fx:id="fontSizeBox" onAction="#handleFontSizeChange" prefHeight="36.0" prefWidth="55.0" promptText="14" />
+                        <Button fx:id="butClear" accessibleRole="TOGGLE_BUTTON" mnemonicParsing="false" onAction="#handleClearAll">
                            <graphic>
                               <ImageView fitHeight="33.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../resources/icons/delete.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <Button fx:id="buttonEraser" accessibleRole="TOGGLE_BUTTON" mnemonicParsing="false" onAction="#selectEraserTool">
+                           <graphic>
+                              <ImageView fitHeight="35.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../resources/icons/rubber.png" />
                                  </image>
                               </ImageView>
                            </graphic>
