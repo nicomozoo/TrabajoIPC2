@@ -164,23 +164,27 @@ public class FXMLDocumentController implements Initializable {
         zoom_slider.setValue(sliderVal + -0.1);
     }
     
-    @FXML
+@FXML
 private void selectAnguloTool(ActionEvent event) {
     currentTool = Tool.ANGULO;
 
+    // Если транспортира нет (еще не создан или был удален) — создаем заново
     if (transportadorView == null) {
         transportadorView = new ImageView(
-        new Image(getClass().getResource("/resources/transportador.png").toExternalForm())
+            new Image(getClass().getResource("/resources/transportador.png").toExternalForm())
         );
-        
         transportadorView.setOpacity(0.5);
         transportadorView.setFitWidth(200);
         transportadorView.setPreserveRatio(true);
         transportadorView.setLayoutX(100);
         transportadorView.setLayoutY(100);
+
         makeDraggable(transportadorView);
+        enableRemovalOnClick(transportadorView);
+
         zoomGroup.getChildren().add(transportadorView);
     }
+    
     updateProtractorState();
 }
 
@@ -195,18 +199,21 @@ private void selectAnguloTool(ActionEvent event) {
     });
 }
 
-    private void updateProtractorState() {
+   private void updateProtractorState() {
     if (transportadorView == null) return;
 
     if (currentTool == Tool.ANGULO) {
         transportadorView.setMouseTransparent(false);
         transportadorView.toFront();
-        transportadorView.setVisible(true);
+    } else if (currentTool == Tool.ERASER) {
+        // в режиме резинки он тоже должен ловить клики
+        transportadorView.setMouseTransparent(false);
+        transportadorView.toFront();
     } else {
+        // во всех остальных режимах — пропускать все клики сквозь себя
         transportadorView.setMouseTransparent(true);
     }
 }
-
     
     
     // esta funcion es invocada al cambiar el value del slider zoom_slider
@@ -348,13 +355,16 @@ private void selectAnguloTool(ActionEvent event) {
                 node instanceof Group);
     }
     
-    private void enableRemovalOnClick(Node node) {
-        node.setOnMouseClicked(e -> {
-            if (currentTool == Tool.ERASER) {
-                zoomGroup.getChildren().remove(node);
+private void enableRemovalOnClick(Node node) {
+    node.setOnMouseClicked(e -> {
+        if (currentTool == Tool.ERASER) {
+            zoomGroup.getChildren().remove(node);
+            if (node == transportadorView) {
+                transportadorView = null;
             }
-        });
-    }
+        }
+    });
+}
     
     
     private void onMousePressed(MouseEvent e) {

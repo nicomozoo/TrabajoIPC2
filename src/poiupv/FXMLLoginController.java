@@ -13,6 +13,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -43,6 +44,12 @@ public class FXMLLoginController {
     private ImageView imagenFondo;
     @FXML
     private StackPane stackPane;
+    @FXML
+    private Button BotVerPassword;
+    @FXML
+    private TextField passwordFieldVisible;
+    
+    private boolean passwordVisible = false;
     
     private void initialize() {
         imagenFondo.fitWidthProperty().bind(stackPane.widthProperty());
@@ -104,5 +111,30 @@ public class FXMLLoginController {
             passwordError.setText("Usuario o contraseña incorrectos.");
             passwordError.setVisible(true);
         }
+    }
+
+    @FXML
+    private void handleVerContraseña(ActionEvent event) {
+        if (passwordVisible) {
+        passwordField.setText(passwordFieldVisible.getText());
+        passwordField.setVisible(true);
+        passwordField.setManaged(true);
+
+        passwordFieldVisible.setVisible(false);
+        passwordFieldVisible.setManaged(false);
+
+        
+    } else {
+        passwordFieldVisible.setText(passwordField.getText());
+        passwordFieldVisible.setVisible(true);
+        passwordFieldVisible.setManaged(true);
+
+        passwordField.setVisible(false);
+        passwordField.setManaged(false);
+
+        
+    }
+
+    passwordVisible = !passwordVisible;
     }
 }

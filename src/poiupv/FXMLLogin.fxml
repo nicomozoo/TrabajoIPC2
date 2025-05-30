@@ -85,15 +85,19 @@
                               <VBox alignment="CENTER_LEFT" prefHeight="94.0" prefWidth="351.0">
                                  <children>
                                     <Label text="Password" textFill="#025477" />
-                                    <PasswordField fx:id="passwordField" prefHeight="26.0" prefWidth="538.0" promptText="LettersNumbersSymbols">
+                                    <StackPane>
                                        <VBox.margin>
                                           <Insets />
                                        </VBox.margin>
-                                    </PasswordField>
+                                       <children>
+                                          <TextField fx:id="passwordFieldVisible" promptText="LettersNumbersSymbols" />
+                                          <PasswordField fx:id="passwordField" prefHeight="26.0" prefWidth="538.0" promptText="LettersNumbersSymbols" />
+                                       </children>
+                                    </StackPane>
                                     <Label fx:id="passwordError" alignment="BOTTOM_LEFT" prefHeight="18.0" prefWidth="642.0" text="Contraseña incorrecta" textFill="#ca0505" visible="false" />
                                  </children>
                               </VBox>
-                              <Button mnemonicParsing="false" prefHeight="23.0" prefWidth="26.0" style="-fx-background-color: transparent; -fx-border-color: #3ab7aa; -fx-border-radius: 25;">
+                              <Button fx:id="BotVerPassword" mnemonicParsing="false" onAction="#handleVerContraseña" prefHeight="23.0" prefWidth="26.0" style="-fx-background-color: transparent; -fx-border-color: #3ab7aa; -fx-border-radius: 25;">
                                  <graphic>
                                     <ImageView fitHeight="17.0" fitWidth="47.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
