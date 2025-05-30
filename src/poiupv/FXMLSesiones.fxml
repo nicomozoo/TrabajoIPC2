@@ -27,7 +27,7 @@
                   <columns>
                       <TableColumn fx:id="dateCol" prefWidth="240.0" text="Fecha" />
                       <TableColumn fx:id="hitsCol" prefWidth="200.0" text="Aciertos" />
-                      <TableColumn fx:id="faultsCol" prefWidth="200.0" text="Errores" />
+                      <TableColumn fx:id="faultsCol" prefWidth="199.19998168945312" style="fx-background-color: #3ab7aa;" text="Errores" />
                   </columns>
               </TableView>
       
