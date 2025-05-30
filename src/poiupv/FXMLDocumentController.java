@@ -46,6 +46,7 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -68,13 +69,9 @@ import poiupv.Poi;
  */
 public class FXMLDocumentController implements Initializable {
 
-    //=======================================
-    // hashmap para guardar los puntos de interes POI
     private final HashMap<String, Poi> hm = new HashMap<>();
     private ObservableList<Poi> data;
-    // ======================================
-    // la variable zoomGroup se utiliza para dar soporte al zoom
-    // el escalado se realiza sobre este nodo, al escalar el Group no mueve sus nodos
+    
     private Group zoomGroup;
     private Group drawGroup;
     private User currentUser;
@@ -132,21 +129,62 @@ public class FXMLDocumentController implements Initializable {
     private Button buttonMover;
     @FXML
     private Button buttonAngulo;
+
+    private Point2D distanceStartPoint;
     
-    @FXML
-    private void selectLineTool() {
-        currentTool = Tool.LINE;
+    private enum Tool {
+        LINE, CIRCLE, TEXT,COORDINATE,DISTANCE, PAN, ANGULO
     }
-    @FXML
-    private void selectCircleTool() {
-        currentTool = Tool.CIRCLE;
-    }  
+    
+    private Tool currentTool = Tool.PAN;
+    private Color currentColor = Color.BLACK;
+    
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        zoom_slider.setMin(0.2);
+        zoom_slider.setMax(3.0);
+        zoom_slider.setValue(0.2);
+        zoom_slider.valueProperty().addListener((o, oldVal, newVal) -> zoom((Double) newVal));
+        mapa = new ImageView(new Image(getClass().getResource("/resources/carta_nautica.jpg").toExternalForm()));
+        mapa.setScaleX(0.5);
+        mapa.setScaleY(0.5);
+
+        Group contentGroup = new Group();
+        zoomGroup = new Group();
+        contentGroup.getChildren().add(zoomGroup);
+        zoomGroup.getChildren().add(map_scrollpane.getContent());
+        map_scrollpane.setContent(contentGroup);
+        
+        zoomGroup.setOnMousePressed(this::onMousePressed);
+        zoomGroup.setOnMouseDragged(this::onMouseDragged);
+        
+        fontSizeBox.getItems().addAll(2, 4, 6, 8, 10, 12, 14, 18, 24, 36);
+        fontSizeBox.setValue(currentFontSize);
+
+        map_scrollpane.addEventFilter(ScrollEvent.SCROLL, event -> {
+            if (event.isControlDown()) {
+                double delta = event.getDeltaY() > 0 ? 0.05 : -0.05;
+                zoom_slider.setValue(zoom_slider.getValue() + delta);
+                event.consume();
+            }
+        });
+
+        zoom(0.2);
+    }
+
+    private void zoom(double scaleValue) {
+        double scrollH = map_scrollpane.getHvalue();
+        double scrollV = map_scrollpane.getVvalue();
+
+        zoomGroup.setScaleX(scaleValue);
+        zoomGroup.setScaleY(scaleValue);
+
+        map_scrollpane.setHvalue(scrollH);
+        map_scrollpane.setVvalue(scrollV);
+    }
 
     @FXML
     void zoomIn(ActionEvent event) {
-        //================================================
-        // el incremento del zoom dependerá de los parametros del 
-        // slider y del resultado esperado
         double sliderVal = zoom_slider.getValue();
         zoom_slider.setValue(sliderVal += 0.1);
     }
@@ -156,93 +194,21 @@ public class FXMLDocumentController implements Initializable {
         double sliderVal = zoom_slider.getValue();
         zoom_slider.setValue(sliderVal + -0.1);
     }
-    
-    @FXML
-private void selectAnguloTool(ActionEvent event) {
-    currentTool = Tool.ANGULO;
-    if (transportadorView == null) {
-        transportadorView = new ImageView(new Image(getClass().getResource("/resources/transportador.jpg").toExternalForm()));
-        transportadorView.setOpacity(0.5); // Полупрозрачность
-        transportadorView.setFitWidth(200); // Подгони размер
-        transportadorView.setPreserveRatio(true);
-
-        transportadorView.setLayoutX(100); // Начальная позиция
-        transportadorView.setLayoutY(100);
-
-        makeDraggable(transportadorView); // Добавим перетаскивание
-
-        zoomGroup.getChildren().add(transportadorView);
-    } else {
-        // Можно включать/выключать видимость
-        transportadorView.setVisible(!transportadorView.isVisible());
-    }
-}
-
-    private void makeDraggable(Node node) {
-    node.setOnMousePressed(event -> {
-        mouseAnchorX = event.getSceneX() - node.getLayoutX();
-        mouseAnchorY = event.getSceneY() - node.getLayoutY();
-    });
-
-    node.setOnMouseDragged(event -> {
-        node.setLayoutX(event.getSceneX() - mouseAnchorX);
-        node.setLayoutY(event.getSceneY() - mouseAnchorY);
-    });
-}
-
-    
-    
-    // esta funcion es invocada al cambiar el value del slider zoom_slider
-    private void zoom(double scaleValue) {
-        //===================================================
-        //guardamos los valores del scroll antes del escalado
-        double scrollH = map_scrollpane.getHvalue();
-        double scrollV = map_scrollpane.getVvalue();
-        //===================================================
-        // escalamos el zoomGroup en X e Y con el valor de entrada
-        zoomGroup.setScaleX(scaleValue);
-        zoomGroup.setScaleY(scaleValue);
-        //===================================================
-        // recuperamos el valor del scroll antes del escalado
-        map_scrollpane.setHvalue(scrollH);
-        map_scrollpane.setVvalue(scrollV);
-    }
-
-    void listClicked(MouseEvent event) {
-        Poi itemSelected = map_listview.getSelectionModel().getSelectedItem();
-
-        // Animación del scroll hasta la mousePosistion del item seleccionado
-        double mapWidth = zoomGroup.getBoundsInLocal().getWidth();
-        double mapHeight = zoomGroup.getBoundsInLocal().getHeight();
-        double scrollH = itemSelected.getPosition().getX() / mapWidth;
-        double scrollV = itemSelected.getPosition().getY() / mapHeight;
-        final Timeline timeline = new Timeline();
-        final KeyValue kv1 = new KeyValue(map_scrollpane.hvalueProperty(), scrollH);
-        final KeyValue kv2 = new KeyValue(map_scrollpane.vvalueProperty(), scrollV);
-        final KeyFrame kf = new KeyFrame(Duration.millis(500), kv1, kv2);
-        timeline.getKeyFrames().add(kf);
-        timeline.play();
-
-        // movemos el objto map_pin hasta la mousePosistion del POI
-//        double pinW = map_pin.getBoundsInLocal().getWidth();
-//        double pinH = map_pin.getBoundsInLocal().getHeight();
-        map_pin.setLayoutX(itemSelected.getPosition().getX());
-        map_pin.setLayoutY(itemSelected.getPosition().getY());
-        pin_info.setText(itemSelected.getDescription());
-        map_pin.setVisible(true);
-    }
-
-    @FXML
-    private void handleColorChange(ActionEvent event) {
-    }
 
     @FXML
     private void selectCoordinateTool(ActionEvent event) {
         currentTool = Tool.COORDINATE;
     }
 
-    private Point2D distanceStartPoint;
-    
+    @FXML
+    private void selectLineTool() {
+        currentTool = Tool.LINE;
+    }
+    @FXML
+    private void selectCircleTool() {
+        currentTool = Tool.CIRCLE;
+    }  
+
     @FXML
     private void selectDistanceTool() {
         currentTool = Tool.DISTANCE;
@@ -254,55 +220,19 @@ private void selectAnguloTool(ActionEvent event) {
         currentTool = Tool.PAN;
     }
     
-    private enum Tool {
-    LINE, CIRCLE, TEXT,COORDINATE,DISTANCE, PAN, ANGULO
-    }
+    @FXML
+    private void selectProtractorTool(ActionEvent event) {
+        
+    }  
     
-    private void handleColorChange() {
-        currentColor = colorPicker.getValue();
-    }
-    
-    private Tool currentTool = Tool.PAN;
-    private Color currentColor = Color.BLACK;
-
-    private void initData() {
+    @FXML
+    private void selectRulerTool(ActionEvent event) {
         
     }
-    
+
     @FXML
     private void selectTextTool() {
         currentTool = Tool.TEXT;
-    }
-
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-        initData();
-        //==========================================================
-        // inicializamos el slider y enlazamos con el zoom
-        zoom_slider.setMin(0.5);
-        zoom_slider.setMax(1.5);
-        zoom_slider.setValue(1.0);
-        zoom_slider.valueProperty().addListener((o, oldVal, newVal) -> zoom((Double) newVal));
-        mapa = new ImageView(new Image(getClass().getResource("/resources/carta_nautica.jpg").toExternalForm()));
-        mapa.setScaleX(0.5);
-        mapa.setScaleY(0.5);
-        //=========================================================================
-        //Envuelva el contenido de scrollpane en un grupo para que 
-        //ScrollPane vuelva a calcular las barras de desplazamiento tras el escalad
-        Group contentGroup = new Group();
-        zoomGroup = new Group();
-        contentGroup.getChildren().add(zoomGroup);
-        zoomGroup.getChildren().add(map_scrollpane.getContent());
-        map_scrollpane.setContent(contentGroup);
-        
-        //Inicializamos manejadores
-        zoomGroup.setOnMousePressed(this::onMousePressed);
-        zoomGroup.setOnMouseDragged(this::onMouseDragged);
-        
-        fontSizeBox.getItems().addAll(2, 4, 6, 8, 10, 12, 14, 18, 24, 36);
-        fontSizeBox.setValue(currentFontSize);
-
     }
     
     @FXML
@@ -321,208 +251,257 @@ private void selectAnguloTool(ActionEvent event) {
                 node instanceof Text ||
                 node instanceof Group);
     }
+
+    @FXML
+    private void handleColorChange(ActionEvent event) {
+        currentColor = colorPicker.getValue();
+    }
     
+    @FXML
+    private void selectAnguloTool(ActionEvent event) {
+        currentTool = Tool.ANGULO;
+        if (transportadorView == null) {
+            transportadorView = new ImageView(new Image(getClass().getResource("/resources/transportador.jpg").toExternalForm()));
+            transportadorView.setOpacity(0.5);
+            transportadorView.setFitWidth(200);
+            transportadorView.setPreserveRatio(true);
+
+            transportadorView.setLayoutX(100);
+            transportadorView.setLayoutY(100);
+
+            makeDraggable(transportadorView);
+
+            zoomGroup.getChildren().add(transportadorView);
+        } else {
+            transportadorView.setVisible(!transportadorView.isVisible());
+        }
+    }
+
+    private void makeDraggable(Node node) {
+        node.setOnMousePressed(event -> {
+            mouseAnchorX = event.getSceneX() - node.getLayoutX();
+            mouseAnchorY = event.getSceneY() - node.getLayoutY();
+        });
+
+        node.setOnMouseDragged(event -> {
+            node.setLayoutX(event.getSceneX() - mouseAnchorX);
+            node.setLayoutY(event.getSceneY() - mouseAnchorY);
+        });
+    }
+
+    void listClicked(MouseEvent event) {
+        Poi itemSelected = map_listview.getSelectionModel().getSelectedItem();
+
+        double mapWidth = zoomGroup.getBoundsInLocal().getWidth();
+        double mapHeight = zoomGroup.getBoundsInLocal().getHeight();
+        double scrollH = itemSelected.getPosition().getX() / mapWidth;
+        double scrollV = itemSelected.getPosition().getY() / mapHeight;
+        final Timeline timeline = new Timeline();
+        final KeyValue kv1 = new KeyValue(map_scrollpane.hvalueProperty(), scrollH);
+        final KeyValue kv2 = new KeyValue(map_scrollpane.vvalueProperty(), scrollV);
+        final KeyFrame kf = new KeyFrame(Duration.millis(500), kv1, kv2);
+        timeline.getKeyFrames().add(kf);
+        timeline.play();
+
+        map_pin.setLayoutX(itemSelected.getPosition().getX());
+        map_pin.setLayoutY(itemSelected.getPosition().getY());
+        pin_info.setText(itemSelected.getDescription());
+        map_pin.setVisible(true);
+    }
     
     private void onMousePressed(MouseEvent e) {
-    if (!e.isPrimaryButtonDown()){return;}
-    switch (currentTool) {
-        case PAN -> {
-           if(currentTool!=Tool.ANGULO){ panStartX = e.getSceneX();
-            panStartY = e.getSceneY();
-            hScrollStart = map_scrollpane.getHvalue();
-            vScrollStart = map_scrollpane.getVvalue();
-            e.consume();}
-        }
-        case LINE -> {
-            linePainting = new Line();
-            linePainting.setStartX(e.getX());
-            linePainting.setStartY(e.getY());
-            linePainting.setEndX(e.getX());
-            linePainting.setEndY(e.getY());
-            linePainting.setStrokeWidth(currentFontSize);
-            linePainting.setStroke(colorPicker.getValue());
-            addContextMenuToLine(linePainting);
-            zoomGroup.getChildren().add(linePainting);
-        }
-        case CIRCLE -> {
-            circlePainting = new Circle(1);
-            circlePainting.setStroke(colorPicker.getValue());
-            circlePainting.setFill(Color.TRANSPARENT);
-            circlePainting.setCenterX(e.getX());
-            circlePainting.setCenterY(e.getY());
-            inicioXArc = e.getX();
-            circlePainting.setStrokeWidth(currentFontSize);
-            addContextMenuToCircle(circlePainting);
-            zoomGroup.getChildren().add(circlePainting);
-        }
-        case TEXT -> {
-            Text textNode = new Text(e.getX(), e.getY(), "");
-            int size = fontSizeBox.getValue();
-            Color color = colorPicker.getValue();
-            textNode.setFont(new Font(size));
-            textNode.setFill(color);
-            TextInputDialog dialog = new TextInputDialog();
-            dialog.setTitle("Agregar nota");
-            dialog.setHeaderText("Introduce el texto de la nota:");
-            Optional<String> result = dialog.showAndWait();
-            result.ifPresent(inputText -> {
-            textNode.setText(inputText);
-            addContextMenuToText(textNode);
-            zoomGroup.getChildren().add(textNode);
-            });
-        }
-        case COORDINATE -> {
-            double x = e.getX();
-            double y = e.getY();
-
-            Line horizontal = new Line(0, y, zoomGroup.getBoundsInLocal().getWidth(), y);
-            Line vertical = new Line(x, 0, x, zoomGroup.getBoundsInLocal().getHeight());                   
-            horizontal.setStroke(Color.GRAY);
-            vertical.setStroke(Color.GRAY);
-            horizontal.getStrokeDashArray().addAll(5.0, 5.0);
-            vertical.getStrokeDashArray().addAll(5.0, 5.0);
-            horizontal.setMouseTransparent(true); // чтобы не мешали клику
-            vertical.setMouseTransparent(true);
-            Text coords = new Text(x + 5, y - 5, String.format("(%.1f, %.1f)", x, y));
-            coords.setFill(Color.BLUE);
-            coords.setFont(Font.font(12));
-            coords.setMouseTransparent(true);
-            Rectangle hitbox = new Rectangle(0, 0, zoomGroup.getBoundsInLocal().getWidth(), zoomGroup.getBoundsInLocal().getHeight());
-            hitbox.setFill(Color.TRANSPARENT);
-            Group marker = new Group (hitbox,horizontal,vertical,coords);
-            addContextMenuToNode(marker);
-            zoomGroup.getChildren().add(marker);
-        }
-        
-        case DISTANCE -> {
-    double startX = e.getX();
-    double startY = e.getY();
-
-    distanceLine = new Line(startX, startY, startX, startY);
-    distanceLine.setStroke(colorPicker.getValue());
-    distanceLine.setStrokeWidth(currentFontSize);
-    distanceLabel = new Text(startX, startY - 5, "");
-    distanceLabel.setFill(Color.RED);
-    distanceLabel.setFont(Font.font(12));
-
-    distanceGroup = new Group(distanceLine, distanceLabel);
-    addContextMenuToNode(distanceGroup);
-
-    zoomGroup.getChildren().add(distanceGroup);
-}
-
-
-    }
-}
-    
-    private void onMouseDragged(MouseEvent e) {
-    switch (currentTool) {
-        case PAN -> {
-            if(currentTool!=Tool.ANGULO){double dx = e.getSceneX() - panStartX;
-            double dy = e.getSceneY() - panStartY;
-
-            double width = map_scrollpane.getContent().getBoundsInLocal().getWidth();
-            double height = map_scrollpane.getContent().getBoundsInLocal().getHeight();
-
-    double newH = hScrollStart - dx / width;
-    double newV = vScrollStart - dy / height;
-
-
-    newH = Math.max(0, Math.min(newH, 1));
-    newV = Math.max(0, Math.min(newV, 1));
-
-    map_scrollpane.setHvalue(newH);
-    map_scrollpane.setVvalue(newV);
-
-    e.consume();}
-        }
-        case LINE -> {
-            if (linePainting != null) {
+        if (!e.isPrimaryButtonDown()) return;
+        switch (currentTool) {
+            case PAN -> {
+                if (currentTool!=Tool.ANGULO) { 
+                    panStartX = e.getSceneX();
+                    panStartY = e.getSceneY();
+                    hScrollStart = map_scrollpane.getHvalue();
+                    vScrollStart = map_scrollpane.getVvalue();
+                    e.consume();
+                }
+            } case LINE -> {
+                linePainting = new Line();
+                linePainting.setStartX(e.getX());
+                linePainting.setStartY(e.getY());
                 linePainting.setEndX(e.getX());
                 linePainting.setEndY(e.getY());
+                linePainting.setStrokeWidth(currentFontSize);
+                linePainting.setStroke(colorPicker.getValue());
+                addContextMenuToLine(linePainting);
+                zoomGroup.getChildren().add(linePainting);
+            } case CIRCLE -> {
+                circlePainting = new Circle(1);
+                circlePainting.setStroke(colorPicker.getValue());
+                circlePainting.setFill(Color.TRANSPARENT);
+                circlePainting.setCenterX(e.getX());
+                circlePainting.setCenterY(e.getY());
+                inicioXArc = e.getX();
+                circlePainting.setStrokeWidth(currentFontSize);
+                addContextMenuToCircle(circlePainting);
+                zoomGroup.getChildren().add(circlePainting);
+            } case TEXT -> {
+                Text textNode = new Text(e.getX(), e.getY(), "");
+                int size = fontSizeBox.getValue();
+                Color color = colorPicker.getValue();
+                textNode.setFont(new Font(size));
+                textNode.setFill(color);
+                TextInputDialog dialog = new TextInputDialog();
+                dialog.setTitle("Agregar nota");
+                dialog.setHeaderText("Introduce el texto de la nota:");
+                Optional<String> result = dialog.showAndWait();
+                result.ifPresent(inputText -> {
+                    textNode.setText(inputText);
+                    addContextMenuToText(textNode);
+                    zoomGroup.getChildren().add(textNode);
+                });
+            } case COORDINATE -> {
+                double x = e.getX();
+                double y = e.getY();
+
+                Line horizontal = new Line(0, y, zoomGroup.getBoundsInLocal().getWidth(), y);
+                Line vertical = new Line(x, 0, x, zoomGroup.getBoundsInLocal().getHeight());                   
+                horizontal.setStroke(Color.GRAY);
+                vertical.setStroke(Color.GRAY);
+                horizontal.getStrokeDashArray().addAll(5.0, 5.0);
+                vertical.getStrokeDashArray().addAll(5.0, 5.0);
+                horizontal.setMouseTransparent(true);
+                vertical.setMouseTransparent(true);
+                Text coords = new Text(x + 5, y - 5, String.format("(%.1f, %.1f)", x, y));
+                coords.setFill(Color.BLUE);
+                coords.setFont(Font.font(12));
+                coords.setMouseTransparent(true);
+                Rectangle hitbox = new Rectangle(0, 0, zoomGroup.getBoundsInLocal().getWidth(), zoomGroup.getBoundsInLocal().getHeight());
+                hitbox.setFill(Color.TRANSPARENT);
+                Group marker = new Group (hitbox,horizontal,vertical,coords);
+                addContextMenuToNode(marker);
+                zoomGroup.getChildren().add(marker);
+            } case DISTANCE -> {
+                double startX = e.getX();
+                double startY = e.getY();
+
+                distanceLine = new Line(startX, startY, startX, startY);
+                distanceLine.setStroke(colorPicker.getValue());
+                distanceLine.setStrokeWidth(currentFontSize);
+                distanceLabel = new Text(startX, startY - 5, "");
+                distanceLabel.setFill(Color.RED);
+                distanceLabel.setFont(Font.font(12));
+
+                distanceGroup = new Group(distanceLine, distanceLabel);
+                addContextMenuToNode(distanceGroup);
+
+                zoomGroup.getChildren().add(distanceGroup);
             }
         }
-        case CIRCLE -> {
-            if (circlePainting != null) {
-                double radius = Math.abs(e.getX() - inicioXArc);
-                circlePainting.setRadius(radius);
+    }
+    
+    private void onMouseDragged(MouseEvent e) {
+        switch (currentTool) {
+            case PAN -> {
+                if (currentTool!=Tool.ANGULO) {
+                    double dx = e.getSceneX() - panStartX;
+                    double dy = e.getSceneY() - panStartY;
+
+                    double width = map_scrollpane.getContent().getBoundsInLocal().getWidth();
+                    double height = map_scrollpane.getContent().getBoundsInLocal().getHeight();
+
+                    double newH = hScrollStart - dx / width;
+                    double newV = vScrollStart - dy / height;
+
+
+                    newH = Math.max(0, Math.min(newH, 1));
+                    newV = Math.max(0, Math.min(newV, 1));
+
+                    map_scrollpane.setHvalue(newH);
+                    map_scrollpane.setVvalue(newV);
+
+                    e.consume();
+                }
+            } case LINE -> {
+                if (linePainting != null) {
+                    linePainting.setEndX(e.getX());
+                    linePainting.setEndY(e.getY());
+                }
+            } case CIRCLE -> {
+                if (circlePainting != null) {
+                    double radius = Math.abs(e.getX() - inicioXArc);
+                    circlePainting.setRadius(radius);
+                }
+            } case DISTANCE -> {
+                if (distanceLine != null && distanceLabel != null) {
+                    double endX = e.getX();
+                    double endY = e.getY();
+
+                    distanceLine.setEndX(endX);
+                    distanceLine.setEndY(endY);
+
+                    double dx = endX - distanceLine.getStartX();
+                    double dy = endY - distanceLine.getStartY();
+                    double length = Math.sqrt(dx * dx + dy * dy);
+
+                    distanceLabel.setText(String.format("%.1f px", length));
+                    distanceLabel.setX((distanceLine.getStartX() + endX) / 2);
+                    distanceLabel.setY((distanceLine.getStartY() + endY) / 2 - 5);
+                }
             }
         }
-        case DISTANCE -> {
-            if (distanceLine != null && distanceLabel != null) {
-        double endX = e.getX();
-        double endY = e.getY();
-
-        distanceLine.setEndX(endX);
-        distanceLine.setEndY(endY);
-
-        double dx = endX - distanceLine.getStartX();
-        double dy = endY - distanceLine.getStartY();
-        double length = Math.sqrt(dx * dx + dy * dy);
-
-        distanceLabel.setText(String.format("%.1f px", length));
-        distanceLabel.setX((distanceLine.getStartX() + endX) / 2);
-        distanceLabel.setY((distanceLine.getStartY() + endY) / 2 - 5);
-    }
-        }
-    }
-     e.consume();
+        e.consume();
     }
     
     private void addContextMenuToLine(Line line) {
-    line.setOnContextMenuRequested(e -> {
-        ContextMenu contextMenu = new ContextMenu();
-        MenuItem eliminar = new MenuItem("Eliminar línea");
+        line.setOnContextMenuRequested(e -> {
+            ContextMenu contextMenu = new ContextMenu();
+            MenuItem eliminar = new MenuItem("Eliminar línea");
 
-        eliminar.setOnAction(ev -> {
-            zoomGroup.getChildren().remove(line);
+            eliminar.setOnAction(ev -> {
+                zoomGroup.getChildren().remove(line);
+            });
+
+            contextMenu.getItems().add(eliminar);
+            contextMenu.show(line, e.getScreenX(), e.getScreenY());
+            e.consume();
         });
-
-        contextMenu.getItems().add(eliminar);
-        contextMenu.show(line, e.getScreenX(), e.getScreenY());
-        e.consume();
-    });
-}
+    }
     
     private void addContextMenuToNode(Node node) {
-    ContextMenu contextMenu = new ContextMenu();
-    MenuItem deleteItem = new MenuItem("Eliminar marca");
+        ContextMenu contextMenu = new ContextMenu();
+        MenuItem deleteItem = new MenuItem("Eliminar marca");
 
-    deleteItem.setOnAction(e -> zoomGroup.getChildren().remove(node));
-    contextMenu.getItems().add(deleteItem);
+        deleteItem.setOnAction(e -> zoomGroup.getChildren().remove(node));
+        contextMenu.getItems().add(deleteItem);
 
-    node.setOnContextMenuRequested(event -> {
-        contextMenu.show(node, event.getScreenX(), event.getScreenY());
-        event.consume();
-    });
-}
+        node.setOnContextMenuRequested(event -> {
+            contextMenu.show(node, event.getScreenX(), event.getScreenY());
+            event.consume();
+        });
+    }
 
     
     private void addContextMenuToText(Text textNode) {
-    ContextMenu contextMenu = new ContextMenu();
-    MenuItem deleteItem = new MenuItem("Eliminar texto");
+        ContextMenu contextMenu = new ContextMenu();
+        MenuItem deleteItem = new MenuItem("Eliminar texto");
 
-    deleteItem.setOnAction(e -> zoomGroup.getChildren().remove(textNode));
-    contextMenu.getItems().add(deleteItem);
+        deleteItem.setOnAction(e -> zoomGroup.getChildren().remove(textNode));
+        contextMenu.getItems().add(deleteItem);
 
-    textNode.setOnContextMenuRequested(e -> {
-        contextMenu.show(textNode, e.getScreenX(), e.getScreenY());
-        e.consume();
-    });
-}
+        textNode.setOnContextMenuRequested(e -> {
+            contextMenu.show(textNode, e.getScreenX(), e.getScreenY());
+            e.consume();
+        });
+    }
     
     private void addContextMenuToCircle(Circle circle) {
-    ContextMenu contextMenu = new ContextMenu();
-    MenuItem deleteItem = new MenuItem("Eliminar circulo");
+        ContextMenu contextMenu = new ContextMenu();
+        MenuItem deleteItem = new MenuItem("Eliminar circulo");
 
-    deleteItem.setOnAction(e -> zoomGroup.getChildren().remove(circle));
-    contextMenu.getItems().add(deleteItem);
+        deleteItem.setOnAction(e -> zoomGroup.getChildren().remove(circle));
+        contextMenu.getItems().add(deleteItem);
 
-    circle.setOnContextMenuRequested(e -> {
-        contextMenu.show(circle, e.getScreenX(), e.getScreenY());
-        e.consume();
-    });
-}
+        circle.setOnContextMenuRequested(e -> {
+            contextMenu.show(circle, e.getScreenX(), e.getScreenY());
+            e.consume();
+        });
+    }
 
 
 
@@ -538,7 +517,6 @@ private void selectAnguloTool(ActionEvent event) {
 
     private void about(ActionEvent event) {
         Alert mensaje = new Alert(Alert.AlertType.INFORMATION);
-        // Acceder al Stage del Dialog y cambiar el icono
         Stage dialogStage = (Stage) mensaje.getDialogPane().getScene().getWindow();
         dialogStage.getIcons().add(new Image(getClass().getResourceAsStream("/resources/logo.png")));
         mensaje.setTitle("Acerca de");
@@ -553,7 +531,7 @@ private void selectAnguloTool(ActionEvent event) {
             Dialog<Poi> poiDialog = new Dialog<>();
             poiDialog.setTitle("Nuevo POI");
             poiDialog.setHeaderText("Introduce un nuevo POI");
-            // Acceder al Stage del Dialog y cambiar el icono
+
             Stage dialogStage = (Stage) poiDialog.getDialogPane().getScene().getWindow();
             dialogStage.getIcons().add(new Image(getClass().getResourceAsStream("/resources/logo.png")));
 
@@ -594,10 +572,8 @@ private void selectAnguloTool(ActionEvent event) {
     
     @FXML
     private void handleBotCerrarSesion(ActionEvent event) throws NavDAOException, IOException {
-    // Obtener el usuario actual
-        if(showAlert("Cerrar Sesión", "¿Estás seguro de que quieres cerrar sesión?")){
+        if (showAlert("Cerrar Sesión", "¿Estás seguro de que quieres cerrar sesión?")) {
             try {
-                // Volver al login
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLInicio.fxml"));
                 Parent root = loader.load();
 
@@ -608,27 +584,25 @@ private void selectAnguloTool(ActionEvent event) {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }else{
-            
         }
     }
 
     @FXML
     private void handleBotVerSesiones(ActionEvent event) {
-         try {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLSesiones.fxml"));
-        Parent root = loader.load();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLSesiones.fxml"));
+            Parent root = loader.load();
 
-        FXMLSesionesController controller = loader.getController();
-        controller.setCurrentUser(currentUser); // Pasar el usuario actual
+            FXMLSesionesController controller = loader.getController();
+            controller.setCurrentUser(currentUser); 
 
-        Stage stage = new Stage();
-        stage.setScene(new Scene(root));
-        stage.setTitle("Historial de sesiones");
-        stage.show();
-    } catch (IOException e) {
-        e.printStackTrace();
-    }
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Historial de sesiones");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -674,10 +648,7 @@ private void selectAnguloTool(ActionEvent event) {
         alert.setHeaderText(null);
         alert.setContentText(content);
         
-        
         Optional<ButtonType> resultado = alert.showAndWait();
         return resultado.isPresent() && resultado.get() == ButtonType.OK;
     }
-
-    
 }

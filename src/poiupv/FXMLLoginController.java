@@ -45,14 +45,16 @@ public class FXMLLoginController {
     private StackPane stackPane;
     
     private void initialize() {
+        imagenFondo.fitWidthProperty().bind(stackPane.widthProperty());
+        imagenFondo.fitHeightProperty().bind(stackPane.heightProperty());
+        
         usernameError.setVisible(false);
         passwordError.setVisible(false);
 
         usernameField.setOnKeyTyped(e -> usernameError.setVisible(false));
         passwordField.setOnKeyTyped(e -> passwordError.setVisible(false));
         
-        imagenFondo.fitWidthProperty().bind(stackPane.widthProperty());
-        imagenFondo.fitHeightProperty().bind(stackPane.heightProperty());
+        
     }
 
     @FXML
