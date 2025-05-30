@@ -137,4 +137,19 @@ public class FXMLLoginController {
 
     passwordVisible = !passwordVisible;
     }
+
+    @FXML
+    private void handleVolverButton(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLInicio.fxml")); // o FXMLMain.fxml
+            Parent root = loader.load();
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Inicio");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
