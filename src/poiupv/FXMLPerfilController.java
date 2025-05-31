@@ -79,6 +79,7 @@ public class FXMLPerfilController {
         String email = emailField.getText();
         String password = passwordField.getText();
         LocalDate birthdate = birthField.getValue();
+        Image nuevoAvatar = imagenFotoPerfil.getImage();
 
         // Validaciones básicas (puedes mejorarlas con regex)
         if (!email.contains("@") || password.length() < 6 || birthdate == null) {
@@ -89,10 +90,7 @@ public class FXMLPerfilController {
         currentUser.setEmail(email);
         currentUser.setPassword(password);
         currentUser.setBirthdate(birthdate);
-        if (imagePath != null) {
-            Image image = new Image(imagePath);
-            currentUser.setAvatar(image);
-        }
+        currentUser.setAvatar(nuevoAvatar);
 
         showAlert("Perfil actualizado", "Los datos se han guardado correctamente.");
     }
