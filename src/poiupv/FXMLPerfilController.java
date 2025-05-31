@@ -17,6 +17,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -48,6 +49,8 @@ public class FXMLPerfilController {
      private User currentUser;
 
     private String imagePath = null;
+    @FXML
+    private MenuItem botCambiarFoto;
 
     public void setCurrentUser(User user) {
         this.currentUser = user;
@@ -106,5 +109,19 @@ public class FXMLPerfilController {
         alert.setContentText(content);
         alert.showAndWait();
     }
+
+    @FXML
+    private void handleBotCambiarFoto(ActionEvent event) {
+        FileChooser fc = new FileChooser();
+        fc.setTitle("Seleccionar imagen de perfil");
+        fc.getExtensionFilters().addAll(
+            new FileChooser.ExtensionFilter("Imágenes", "*.png", "*.jpg", "*.jpeg", "*.gif")
+        );
+
+        imagenFotoPerfil.setImage(new Image(fc.showOpenDialog(new Stage()).toURI().toString()));    
+    }
+
+    
+    
     
 }

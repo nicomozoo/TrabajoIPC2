@@ -37,7 +37,7 @@
                   </VBox>
                   <MenuButton fx:id="botFoto" mnemonicParsing="false" onAction="#handleBotFotoOnAction" prefHeight="26.0" prefWidth="145.0" style="-fx-background-color: #3ab7aa; -fx-background-radius: 20;" text="Cambiar foto de perfil" textFill="WHITE">
                      <items>
-                        <MenuItem mnemonicParsing="false" text="Selecciona de tu ordenador" />
+                        <MenuItem fx:id="botCambiarFoto" mnemonicParsing="false" onAction="#handleBotCambiarFoto" text="Selecciona de tu ordenador" />
                      </items>
                      <font>
                         <Font name="System Bold" size="11.0" />

@@ -22,7 +22,7 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<StackPane prefHeight="599.0" prefWidth="914.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="poiupv.FXMLDocumentController">
+<StackPane prefHeight="599.0" prefWidth="914.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="poiupv.FXMLDocumentController">
    <children>
       <StackPane style="-fx-border-color: #3ab7aa; -fx-border-width: 4;">
          <children>
@@ -179,7 +179,7 @@
                               <Color />
                            </value>
                         </ColorPicker>
-                        <ComboBox fx:id="fontSizeBox" onAction="#handleFontSizeChange" prefHeight="36.0" prefWidth="55.0" promptText="14" />
+                        <ComboBox fx:id="fontSizeBox" onAction="#handleFontSizeChange" prefHeight="36.0" prefWidth="56.0" promptText="14" />
                         <Button fx:id="butClear" accessibleRole="TOGGLE_BUTTON" mnemonicParsing="false" onAction="#handleClearAll">
                            <graphic>
                               <ImageView fitHeight="33.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
