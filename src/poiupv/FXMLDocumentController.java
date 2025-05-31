@@ -96,6 +96,9 @@ public class FXMLDocumentController implements Initializable {
     private double hScrollStart, vScrollStart;
     private ImageView transportadorView;
     private double mouseAnchorX, mouseAnchorY;
+    private Node nodeBeingMoved = null;
+    private double moveAnchorSceneX, moveAnchorSceneY;
+    private double nodeInitTranslateX, nodeInitTranslateY;
 
 
 
@@ -137,6 +140,8 @@ public class FXMLDocumentController implements Initializable {
     private Button buttonAngulo;
     @FXML
     private Button buttonEraser;
+    @FXML
+    private Button buttonMove;
     
     @FXML
     private void selectLineTool() {
@@ -198,7 +203,8 @@ private void selectAnguloTool(ActionEvent event) {
         node.setLayoutY(event.getSceneY() - mouseAnchorY);
     });
 }
-
+    
+    private final List<Node> drawnElements = new ArrayList<>();
    private void updateProtractorState() {
     if (transportadorView == null) return;
 
@@ -286,9 +292,15 @@ private void selectAnguloTool(ActionEvent event) {
         currentTool = Tool.ERASER;
         updateProtractorState();
     }
+
+    @FXML
+    private void selectMoveTool(ActionEvent event) {
+        currentTool = Tool.MOVE;
+        updateProtractorState(); 
+    }
     
     private enum Tool {
-    LINE, CIRCLE, TEXT,COORDINATE,DISTANCE, PAN, ANGULO, ERASER
+    LINE, CIRCLE, TEXT,COORDINATE,DISTANCE, PAN, ANGULO, ERASER, MOVE
     }
     
     private void handleColorChange() {
@@ -305,6 +317,7 @@ private void selectAnguloTool(ActionEvent event) {
     @FXML
     private void selectTextTool() {
         currentTool = Tool.TEXT;
+        updateProtractorState();
     }
 
     @Override
@@ -353,12 +366,14 @@ private void selectAnguloTool(ActionEvent event) {
                 node instanceof Arc ||
                 node instanceof Text ||
                 node instanceof Group);
+        drawnElements.clear();
     }
     
 private void enableRemovalOnClick(Node node) {
     node.setOnMouseClicked(e -> {
         if (currentTool == Tool.ERASER) {
             zoomGroup.getChildren().remove(node);
+            drawnElements.remove(node);
             if (node == transportadorView) {
                 transportadorView = null;
             }
@@ -388,6 +403,8 @@ private void enableRemovalOnClick(Node node) {
             addContextMenuToLine(linePainting);
             enableRemovalOnClick(linePainting);
             zoomGroup.getChildren().add(linePainting);
+            drawnElements.add(linePainting);
+
         }
         case CIRCLE -> {
             arcPainting = new Arc();
@@ -407,6 +424,8 @@ private void enableRemovalOnClick(Node node) {
             enableRemovalOnClick(arcPainting);
             zoomGroup.getChildren().add(arcPainting);
             addContextMenuToCircle(arcPainting);
+            drawnElements.add(arcPainting);
+
         }
         case TEXT -> {
             Text textNode = new Text(e.getX(), e.getY(), "");
@@ -423,6 +442,8 @@ private void enableRemovalOnClick(Node node) {
             enableRemovalOnClick(textNode);
             addContextMenuToText(textNode);
             zoomGroup.getChildren().add(textNode);
+            drawnElements.add(textNode);
+
             });
         }
         case COORDINATE -> {
@@ -440,6 +461,7 @@ private void enableRemovalOnClick(Node node) {
             enableRemovalOnClick(cross);
             zoomGroup.getChildren().add(cross);
             addContextMenuToNode(cross);
+            drawnElements.add(cross);
         }
         
         case DISTANCE -> {
@@ -457,8 +479,25 @@ private void enableRemovalOnClick(Node node) {
     addContextMenuToNode(distanceGroup);
     enableRemovalOnClick(distanceGroup);
     zoomGroup.getChildren().add(distanceGroup);
-}
+    drawnElements.add(distanceGroup);
 
+}
+                case MOVE -> {
+                    nodeBeingMoved = null;
+
+                    Node picked = e.getPickResult().getIntersectedNode();
+                    while (picked != null && picked.getParent() != zoomGroup) {
+                        picked = picked.getParent();
+                    }
+                    if (picked != null && picked != zoomGroup && drawnElements.contains(picked)) {
+                        nodeBeingMoved = picked;
+                        moveAnchorSceneX = e.getSceneX();
+                        moveAnchorSceneY = e.getSceneY();
+                        nodeInitTranslateX = picked.getTranslateX();
+                        nodeInitTranslateY = picked.getTranslateY();
+                    }
+            }
+                
 
     }
 }
@@ -530,6 +569,14 @@ private void enableRemovalOnClick(Node node) {
         distanceLabel.setY((distanceLine.getStartY() + endY) / 2 - 5);
     }
         }
+        case MOVE -> {
+            if (nodeBeingMoved != null) {
+                double dx = e.getSceneX() - moveAnchorSceneX;
+                double dy = e.getSceneY() - moveAnchorSceneY;
+                nodeBeingMoved.setTranslateX(nodeInitTranslateX + dx);
+                nodeBeingMoved.setTranslateY(nodeInitTranslateY + dy);
+            }
+        }
     }
      e.consume();
     }
@@ -545,6 +592,7 @@ private void enableRemovalOnClick(Node node) {
 
         contextMenu.getItems().add(eliminar);
         contextMenu.show(line, e.getScreenX(), e.getScreenY());
+        drawnElements.remove(line);
         e.consume();
     });
 }
@@ -555,9 +603,10 @@ private void enableRemovalOnClick(Node node) {
 
     deleteItem.setOnAction(e -> zoomGroup.getChildren().remove(node));
     contextMenu.getItems().add(deleteItem);
-
+    
     node.setOnContextMenuRequested(event -> {
         contextMenu.show(node, event.getScreenX(), event.getScreenY());
+        drawnElements.remove(node);
         event.consume();
     });
 }
@@ -572,6 +621,7 @@ private void enableRemovalOnClick(Node node) {
 
     textNode.setOnContextMenuRequested(e -> {
         contextMenu.show(textNode, e.getScreenX(), e.getScreenY());
+        drawnElements.remove(textNode);
         e.consume();
     });
 }
@@ -582,9 +632,10 @@ private void enableRemovalOnClick(Node node) {
 
     deleteItem.setOnAction(e -> zoomGroup.getChildren().remove(circle));
     contextMenu.getItems().add(deleteItem);
-
+    
     circle.setOnContextMenuRequested(e -> {
         contextMenu.show(circle, e.getScreenX(), e.getScreenY());
+        drawnElements.remove(circle);
         e.consume();
     });
 }
