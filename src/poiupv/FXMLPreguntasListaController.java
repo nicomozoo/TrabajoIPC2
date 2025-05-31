@@ -102,6 +102,6 @@ public class FXMLPreguntasListaController implements Initializable {
     public void cancel(ActionEvent event) {
         currentUser.addSession(PoiUPVApp.getAciertos(), PoiUPVApp.getFallos());
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.close();  // Cierra esta ventana
+        stage.close();  
     }
 }

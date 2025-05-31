@@ -67,7 +67,6 @@ public class FXMLSesionesController implements Initializable{
     }
 
     public void initialize(URL url, ResourceBundle rb) {
-        // Vincular columnas con propiedades de la clase Session
         dateCol.setCellValueFactory(new PropertyValueFactory<>("date"));
         hitsCol.setCellValueFactory(new PropertyValueFactory<>("hits"));
         faultsCol.setCellValueFactory(new PropertyValueFactory<>("faults"));
@@ -102,7 +101,6 @@ public class FXMLSesionesController implements Initializable{
                 .collect(Collectors.toList())
         );
     } else {
-        // Si no hay fecha seleccionada, mostrar todas
         sesionesFiltradas.setAll(todasLasSesiones);
     }
     }

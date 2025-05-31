@@ -117,7 +117,6 @@ public class FXMLPreguntasController implements Initializable {
         comprobar.setDisable(true);
         if (randomMode) volver.setDisable(true);
 
-        // Colorear respuestas según validez
         for (Toggle t : grupoRespuestas.getToggles()) {
             RadioButton b = (RadioButton) t;
             boolean esCorrecta = ((Answer) b.getUserData()).getValidity();
@@ -125,7 +124,6 @@ public class FXMLPreguntasController implements Initializable {
             b.setDisable(true);
         }
 
-        // Mostrar mensaje de resultado
         boolean esCorrecta = respuesta.getValidity();
         if (esCorrecta) {
             PoiUPVApp.setAciertos(PoiUPVApp.getAciertos() + 1);

@@ -55,7 +55,6 @@ public class FXMLPerfilController {
     public void setCurrentUser(User user) {
         this.currentUser = user;
     
-        // Cargar datos actuales
         emailField.setText(user.getEmail());
         birthField.setValue(user.getBirthdate());
         imagenFotoPerfil.setImage(user.getAvatar());
@@ -81,7 +80,6 @@ public class FXMLPerfilController {
         LocalDate birthdate = birthField.getValue();
         Image nuevoAvatar = imagenFotoPerfil.getImage();
 
-        // Validaciones básicas (puedes mejorarlas con regex)
         if (!email.contains("@") || password.length() < 6 || birthdate == null) {
             showAlert("Datos inválidos", "Revisa los campos. Email, contraseña y fecha obligatorios.");
             return;

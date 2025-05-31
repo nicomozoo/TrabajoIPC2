@@ -69,7 +69,6 @@ public class FXMLLoginController {
         String nick = usernameField.getText().trim();
         String password = passwordField.getText();
 
-        // Validación de campos vacíos
         if (nick.isEmpty()) {
             usernameError.setText("El nombre de usuario no puede estar vacío.");
             usernameError.setVisible(true);
@@ -82,7 +81,6 @@ public class FXMLLoginController {
             return;
         }
 
-        // Autenticación
         User user = Navigation.getInstance().authenticate(nick, password);
         
 
@@ -105,7 +103,7 @@ public class FXMLLoginController {
             }
 
         } else {
-            // Si la autenticación falla, no sabemos cuál está mal
+            
             usernameError.setText("Usuario o contraseña incorrectos.");
             usernameError.setVisible(true);
             passwordError.setText("Usuario o contraseña incorrectos.");
@@ -141,7 +139,7 @@ public class FXMLLoginController {
     @FXML
     private void handleVolverButton(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLInicio.fxml")); // o FXMLMain.fxml
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLInicio.fxml")); 
             Parent root = loader.load();
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

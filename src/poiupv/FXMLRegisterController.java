@@ -53,14 +53,13 @@ public class FXMLRegisterController implements Initializable {
     @FXML
     private TextField emailField;
  
-    //properties to control valid fields values. 
+     
     private BooleanProperty validEmail;
     private BooleanProperty validUsername;
     private BooleanProperty validPassword;
     private BooleanProperty validDate;
  
     
-    // listener to register on textProperty() or valueProperty()
     private ChangeListener<String> listenerEmail;
     private ChangeListener<String> listenerUsername;
     private ChangeListener<String> listenerPassword;
@@ -99,10 +98,9 @@ public class FXMLRegisterController implements Initializable {
     
     private void checkEmail() {
         String email = emailField.getText();
-//        boolean isValid = email.matches("^[A-Za-z0-9+_.-]+@(.+)$");
         boolean isValid = email.matches("^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$");
-        validEmail.set(isValid); //actualiza la property asociada
-        showError(isValid, emailField, emailError); //muestra o esconde el mensaje de error
+        validEmail.set(isValid); 
+        showError(isValid, emailField, emailError); 
     }
     
     private void checkUsername(){
@@ -149,13 +147,11 @@ public class FXMLRegisterController implements Initializable {
         
         validDate = new SimpleBooleanProperty(false);
 
-        //When the field loses focus, the field is validated. 
+         
         emailField.focusedProperty().addListener((obs, oldVal, newVal) -> {
             if (!newVal) {
                 checkEmail();
                 if (!validEmail.get()) {
-                    //If it is not correct, a listener is added to the text or value 
-                    //so that the field is validated while it is being edited.
                     if (listenerEmail == null) {
                         listenerEmail = (a, b, c) -> checkEmail();
                         emailField.textProperty().addListener(listenerEmail);
@@ -168,8 +164,6 @@ public class FXMLRegisterController implements Initializable {
             if (!newVal) {
                 checkUsername();
                 if (!validUsername.get()) {
-                    //If it is not correct, a listener is added to the text or value 
-                    //so that the field is validated while it is being edited.
                     if (listenerUsername == null) {
                         listenerUsername = (a, b, c) -> checkUsername();
                         usernameField.textProperty().addListener(listenerUsername);
@@ -182,8 +176,6 @@ public class FXMLRegisterController implements Initializable {
             if (!newVal) {
                 checkPassword();
                 if (!validPassword.get()) {
-                    //If it is not correct, a listener is added to the text or value 
-                    //so that the field is validated while it is being edited.
                     if (listenerPassword == null) {
                         listenerPassword = (a, b, c) -> checkPassword();
                         passwordField.textProperty().addListener(listenerPassword);
@@ -196,8 +188,6 @@ public class FXMLRegisterController implements Initializable {
             if (!newVal) {
                 checkDate();
                 if (!validDate.get()) {
-                    //If it is not correct, a listener is added to the text or value 
-                    //so that the field is validated while it is being edited.
                     if (listenerBirthDate == null) {
                         listenerBirthDate = (a, b, c) -> checkDate();
                         birthField.valueProperty().addListener(listenerBirthDate);
@@ -264,13 +254,13 @@ public class FXMLRegisterController implements Initializable {
     }
 
     void setCurrentUser(User currentUser) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        throw new UnsupportedOperationException("Not supported yet."); 
     }
 
     @FXML
     private void handleBotCancel(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLInicio.fxml")); // o FXMLMain.fxml
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLInicio.fxml"));
             Parent root = loader.load();
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
