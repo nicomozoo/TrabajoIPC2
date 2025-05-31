@@ -14,6 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 /**
@@ -30,7 +31,17 @@ public class FXMLInicioController {
     private Button botLogin;
     @FXML
     private Button botRegister;
-
+    @FXML
+    private StackPane stackPane;
+    @FXML
+    private ImageView imagenOlas;
+    
+    @FXML
+    public void initialize() {
+    imagenOlas.fitWidthProperty().bind(stackPane.widthProperty());
+    imagenOlas.fitHeightProperty().bind(stackPane.heightProperty());
+}
+    
     @FXML
     private void handleBotLogin(ActionEvent event) {
         try {

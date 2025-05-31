@@ -5,35 +5,30 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="650.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="poiupv.FXMLInicioController">
+<StackPane fx:id="stackPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="650.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="poiupv.FXMLInicioController">
    <children>
-      <ImageView fitHeight="451.0" fitWidth="650.0" pickOnBounds="true">
+      <ImageView fx:id="imagenOlas" fitHeight="451.0" fitWidth="650.0" pickOnBounds="true">
          <image>
             <Image url="@../resources/fondo_degradado_con_olas.png" />
          </image>
       </ImageView>
-      <AnchorPane prefHeight="400.0" prefWidth="572.0">
+      <VBox alignment="CENTER" prefHeight="381.0" prefWidth="242.0" spacing="20.0" style="-fx-border-radius: 20;">
+         <padding>
+            <Insets bottom="40.0" left="20.0" right="20.0" top="40.0" />
+         </padding>
          <children>
-            <VBox alignment="CENTER" layoutX="204.0" layoutY="31.0" prefHeight="381.0" prefWidth="242.0" spacing="20.0" style="-fx-border-radius: 20;">
-               <padding>
-                  <Insets bottom="40.0" left="20.0" right="20.0" top="40.0" />
-               </padding>
-               <children>
-                  <ImageView fx:id="logoImage" fitHeight="127.0" fitWidth="130.0" preserveRatio="true">
-                     <image>
-                        <Image url="@../resources/logo_barco_circular%20(1).png" />
-                     </image>
-                  </ImageView>
-                  <Label fx:id="labelAppName" style="-fx-font-size: 32px; -fx-font-weight: bold;" text="NAVALTEST" textFill="WHITE" />
-                  <Button fx:id="botLogin" onAction="#handleBotLogin" prefWidth="200.0" style="-fx-background-color: #013a6f; -fx-text-fill: white; -fx-font-size: 16px;" text="Iniciar sesión" textFill="WHITE" />
-                  <Button fx:id="botRegister" onAction="#handleBotRegister" prefWidth="200.0" style="-fx-background-color: white; -fx-text-fill: black; -fx-font-size: 16px;" text="Registrarse" />
-               </children>
-            </VBox>
+            <ImageView fx:id="logoImage" fitHeight="127.0" fitWidth="130.0" preserveRatio="true">
+               <image>
+                  <Image url="@../resources/logo_barco_circular%20(1).png" />
+               </image>
+            </ImageView>
+            <Label fx:id="labelAppName" style="-fx-font-size: 32px; -fx-font-weight: bold;" text="NAVALTEST" textFill="WHITE" />
+            <Button fx:id="botLogin" onAction="#handleBotLogin" prefWidth="200.0" style="-fx-background-color: #013a6f; -fx-text-fill: white; -fx-font-size: 16px;" text="Iniciar sesión" textFill="WHITE" />
+            <Button fx:id="botRegister" onAction="#handleBotRegister" prefWidth="200.0" style="-fx-background-color: white; -fx-text-fill: black; -fx-font-size: 16px;" text="Registrarse" />
          </children>
-      </AnchorPane>
+      </VBox>
    </children>
 </StackPane>
