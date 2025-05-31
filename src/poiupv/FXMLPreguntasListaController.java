@@ -52,7 +52,8 @@ public class FXMLPreguntasListaController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
+        //imagenFondoOlas.fitWidthProperty().bind(stackPane.widthProperty());
+        //imagenFondoOlas.fitHeightProperty().bind(stackPane.heightProperty());
         ObservableList items = list.getItems();
         try {
             ArrayList<Problem> al = new ArrayList<>(Navigation.getInstance().getProblems());

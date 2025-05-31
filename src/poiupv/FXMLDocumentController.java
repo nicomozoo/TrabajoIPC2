@@ -173,7 +173,6 @@ public class FXMLDocumentController implements Initializable {
 private void selectAnguloTool(ActionEvent event) {
     currentTool = Tool.ANGULO;
 
-    // Если транспортира нет (еще не создан или был удален) — создаем заново
     if (transportadorView == null) {
         transportadorView = new ImageView(
             new Image(getClass().getResource("/resources/transportador.png").toExternalForm())
@@ -212,28 +211,22 @@ private void selectAnguloTool(ActionEvent event) {
         transportadorView.setMouseTransparent(false);
         transportadorView.toFront();
     } else if (currentTool == Tool.ERASER) {
-        // в режиме резинки он тоже должен ловить клики
         transportadorView.setMouseTransparent(false);
         transportadorView.toFront();
     } else {
-        // во всех остальных режимах — пропускать все клики сквозь себя
         transportadorView.setMouseTransparent(true);
     }
 }
     
     
-    // esta funcion es invocada al cambiar el value del slider zoom_slider
+    
     private void zoom(double scaleValue) {
-        //===================================================
-        //guardamos los valores del scroll antes del escalado
         double scrollH = map_scrollpane.getHvalue();
         double scrollV = map_scrollpane.getVvalue();
-        //===================================================
-        // escalamos el zoomGroup en X e Y con el valor de entrada
+        
         zoomGroup.setScaleX(scaleValue);
         zoomGroup.setScaleY(scaleValue);
-        //===================================================
-        // recuperamos el valor del scroll antes del escalado
+        
         map_scrollpane.setHvalue(scrollH);
         map_scrollpane.setVvalue(scrollV);
     }
@@ -663,7 +656,7 @@ private void enableRemovalOnClick(Node node) {
             Dialog<Poi> poiDialog = new Dialog<>();
             poiDialog.setTitle("Nuevo POI");
             poiDialog.setHeaderText("Introduce un nuevo POI");
-            // Acceder al Stage del Dialog y cambiar el icono
+            
             Stage dialogStage = (Stage) poiDialog.getDialogPane().getScene().getWindow();
             dialogStage.getIcons().add(new Image(getClass().getResourceAsStream("/resources/logo.png")));
 
@@ -704,10 +697,9 @@ private void enableRemovalOnClick(Node node) {
     
     @FXML
     private void handleBotCerrarSesion(ActionEvent event) throws NavDAOException, IOException {
-    // Obtener el usuario actual
+    
         if(showAlert("Cerrar Sesión", "¿Estás seguro de que quieres cerrar sesión?")){
             try {
-                // Volver al login
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLInicio.fxml"));
                 Parent root = loader.load();
 
@@ -730,10 +722,11 @@ private void enableRemovalOnClick(Node node) {
         Parent root = loader.load();
 
         FXMLSesionesController controller = loader.getController();
-        controller.setCurrentUser(currentUser); // Pasar el usuario actual
+        controller.setCurrentUser(currentUser); 
 
         Stage stage = new Stage();
         stage.setScene(new Scene(root));
+        stage.setResizable(false);
         stage.setTitle("Historial de sesiones");
         stage.show();
     } catch (IOException e) {
@@ -752,6 +745,7 @@ private void enableRemovalOnClick(Node node) {
 
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
+            stage.setResizable(false);
             stage.setTitle("Editar Perfil");
             stage.show();
         } catch (IOException e) {
