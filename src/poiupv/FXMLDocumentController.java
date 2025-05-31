@@ -241,7 +241,7 @@ private void selectAnguloTool(ActionEvent event) {
     void listClicked(MouseEvent event) {
         Poi itemSelected = map_listview.getSelectionModel().getSelectedItem();
 
-        // Animación del scroll hasta la mousePosistion del item seleccionado
+        
         double mapWidth = zoomGroup.getBoundsInLocal().getWidth();
         double mapHeight = zoomGroup.getBoundsInLocal().getHeight();
         double scrollH = itemSelected.getPosition().getX() / mapWidth;
@@ -253,9 +253,7 @@ private void selectAnguloTool(ActionEvent event) {
         timeline.getKeyFrames().add(kf);
         timeline.play();
 
-        // movemos el objto map_pin hasta la mousePosistion del POI
-//        double pinW = map_pin.getBoundsInLocal().getWidth();
-//        double pinH = map_pin.getBoundsInLocal().getHeight();
+        
         map_pin.setLayoutX(itemSelected.getPosition().getX());
         map_pin.setLayoutY(itemSelected.getPosition().getY());
         pin_info.setText(itemSelected.getDescription());
@@ -322,10 +320,9 @@ private void selectAnguloTool(ActionEvent event) {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        
         initData();
-        //==========================================================
-        // inicializamos el slider y enlazamos con el zoom
+        
         zoom_slider.setMin(0.5);
         zoom_slider.setMax(1.5);
         zoom_slider.setValue(1.0);
@@ -333,16 +330,13 @@ private void selectAnguloTool(ActionEvent event) {
         mapa = new ImageView(new Image(getClass().getResource("/resources/carta_nautica.jpg").toExternalForm()));
         mapa.setScaleX(0.5);
         mapa.setScaleY(0.5);
-        //=========================================================================
-        //Envuelva el contenido de scrollpane en un grupo para que 
-        //ScrollPane vuelva a calcular las barras de desplazamiento tras el escalad
+        
         Group contentGroup = new Group();
         zoomGroup = new Group();
         contentGroup.getChildren().add(zoomGroup);
         zoomGroup.getChildren().add(map_scrollpane.getContent());
         map_scrollpane.setContent(contentGroup);
         
-        //Inicializamos manejadores
         zoomGroup.setOnMousePressed(this::onMousePressed);
         zoomGroup.setOnMouseDragged(this::onMouseDragged);
         

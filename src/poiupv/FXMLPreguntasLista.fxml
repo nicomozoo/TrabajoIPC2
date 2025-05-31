@@ -14,7 +14,7 @@
 
 <StackPane fx:id="stackPane" prefHeight="466.0" prefWidth="675.0" style="-fx-background-color: #ebffff;" stylesheets="@../resources/preguntas.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="poiupv.FXMLPreguntasListaController">
    <children>
-      <ImageView fx:id="imagenFondo" fitHeight="485.0" fitWidth="675.0" pickOnBounds="true" StackPane.alignment="CENTER">
+      <ImageView fx:id="imagenFondoOlas" fitHeight="485.0" fitWidth="675.0" pickOnBounds="true" StackPane.alignment="CENTER">
          <image>
             <Image url="@../resources/fondo_degradado_con_olas.png" />
          </image>

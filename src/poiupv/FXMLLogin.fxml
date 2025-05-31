@@ -19,7 +19,7 @@
 
 <StackPane fx:id="stackPane" style="-fx-background-color: #ebffff;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="poiupv.FXMLLoginController">
    <children>
-      <ImageView fx:id="imagenFondo" fitHeight="535.0" fitWidth="837.0" pickOnBounds="true" StackPane.alignment="CENTER">
+      <ImageView fx:id="imagenFondo" fitHeight="461.0" fitWidth="666.0" pickOnBounds="true" StackPane.alignment="CENTER">
          <image>
             <Image url="@../resources/fondo_degradado_con_olas.png" />
          </image>

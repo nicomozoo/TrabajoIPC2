@@ -96,6 +96,7 @@ public class FXMLLoginController {
 
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 stage.setScene(new Scene(root));
+                stage.setResizable(true);
                 stage.setTitle("Menú Principal");
                 stage.show();
             } catch (IOException e) {

@@ -22,6 +22,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import model.NavDAOException;
 import model.Navigation;
@@ -42,10 +44,15 @@ public class FXMLPreguntasListaController implements Initializable {
     private ListView list;
     
     private User currentUser;
+    @FXML
+    private StackPane stackPane;
+    @FXML
+    private ImageView imagenFondoOlas;
     
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        
         ObservableList items = list.getItems();
         try {
             ArrayList<Problem> al = new ArrayList<>(Navigation.getInstance().getProblems());

@@ -39,6 +39,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -88,12 +89,13 @@ public class FXMLRegisterController implements Initializable {
     private Button botFoto;
     @FXML
     private ImageView imagenFotoPerfil;
-    @FXML
-    private Pane pane;
+    
     @FXML
     private ImageView imagenFondo;
     @FXML
     private VBox VBox;
+    @FXML
+    private StackPane stackPane;
 
     
     private void checkEmail() {
@@ -134,8 +136,8 @@ public class FXMLRegisterController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         
-        imagenFondo.fitWidthProperty().bind(pane.widthProperty());
-        imagenFondo.fitHeightProperty().bind(pane.heightProperty());
+        imagenFondo.fitWidthProperty().bind(stackPane.widthProperty());
+        imagenFondo.fitHeightProperty().bind(stackPane.heightProperty());
         
         
         

@@ -40,6 +40,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Toggle;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
@@ -63,6 +65,10 @@ public class FXMLPreguntasController implements Initializable {
     public int hits;
     public int faults;
     public int index;
+    @FXML
+    private StackPane stackPane;
+    @FXML
+    private ImageView imagenFondo;
     
     public void barajar() {
         Collections.shuffle(problemasPendientes);
@@ -176,6 +182,8 @@ public class FXMLPreguntasController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        imagenFondo.fitWidthProperty().bind(stackPane.widthProperty());
+        imagenFondo.fitHeightProperty().bind(stackPane.heightProperty());
         if (problemasPendientes == null) {
             try {
                 problemasPendientes = new ArrayList<>(Navigation.getInstance().getProblems());
